@@ -1,0 +1,12 @@
+<%- include('partials/header') %>
+
+<main>
+    <h2>Available Products</h2>
+    <ul>
+        <% products.forEach(function(product) { %>
+            <li><%= product.name %>: $<%= product.price %></li>
+        <% }); %>
+    </ul>
+</main>
+
+<%- include('partials/footer') %>
