@@ -44,6 +44,30 @@ app.post("/deleteTask", (req, res) => {
     }
     res.redirect("/todo"); // Redirect to the to-do page after deleting task
 });
+
+
+const products = [
+    { name: "Laptop", price: 1200 },
+    { name: "Smartphone", price: 800 },
+    { name: "Tablet", price: 400 },
+    { name: "Headphones", price: 150 },
+    { name: "Smartwatch", price: 250 }
+];
+
+// Products route
+app.get("/products", (req, res) => {
+    let filteredProducts = products;
+    const searchQuery = req.query.search;
+
+    if (searchQuery) {
+        filteredProducts = products.filter(product =>
+            product.name.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+    }
+
+    res.render("product", { products: filteredProducts });
+});
+
 app.listen(PORT,(err)=>{
     if(err){
         console.log(err);
