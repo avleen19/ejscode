@@ -53,7 +53,11 @@ const products = [
     { name: "Headphones", price: 150 },
     { name: "Smartwatch", price: 250 }
 ];
-
+const users = {
+    "john": { age: 25, hobby: "Football" },
+    "jane": { age: 22, hobby: "Painting" },
+    "sam": { age: 30, hobby: "Cooking" }
+};
 // Products route
 app.get("/products", (req, res) => {
     let filteredProducts = products;
@@ -67,7 +71,18 @@ app.get("/products", (req, res) => {
 
     res.render("product", { products: filteredProducts });
 });
+app.get("/profile/:username", (req, res) => {
+    const username = req.params.username;
 
+    // Get user data based on the username
+    const user = users[username.toLowerCase()];
+
+    if (user) {
+        res.render("profile", { username, age: user.age, hobby: user.hobby });
+    } else {
+        res.status(404).send("User not found");
+    }
+});
 app.listen(PORT,(err)=>{
     if(err){
         console.log(err);
