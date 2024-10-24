@@ -58,7 +58,13 @@ const users = {
     "jane": { age: 22, hobby: "Painting" },
     "sam": { age: 30, hobby: "Cooking" }
 };
-// Products route
+const items = [
+    { name: "Laptop", category: "electronics" },
+    { name: "Smartphone", category: "electronics" },
+    { name: "Book", category: "literature" },
+    { name: "Movie", category: "entertainment" }
+];
+
 app.get("/products", (req, res) => {
     let filteredProducts = products;
     const searchQuery = req.query.search;
@@ -82,6 +88,14 @@ app.get("/profile/:username", (req, res) => {
     } else {
         res.status(404).send("User not found");
     }
+});
+app.get("/search", (req, res) => {
+    const query = req.query.q || ""; // Get the query string
+    const results = items.filter(item =>
+        item.name.toLowerCase().includes(query.toLowerCase())
+    );
+
+    res.render("search", { query, results });
 });
 app.listen(PORT,(err)=>{
     if(err){
