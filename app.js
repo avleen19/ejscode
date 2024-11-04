@@ -1,13 +1,16 @@
 const express = require("express");
 const path = require("path");
+const multer = require("multer");
 const app = express();
 const PORT = 8080;
 
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public")); // Serve static files from "public" directory
-app.use(express.json())
-let tasks = []; 
+app.use(express.static(path.join(__dirname, "public")));
+app.use(express.json());
+app.use(express.static("uploads")); // Serve uploaded images
+
+let tasks = [];
 const products = [
     { name: "Laptop", price: 1200, image: "/images/laptop.jpg", description: "A powerful laptop" },
     { name: "Smartphone", price: 800, image: "/images/smartphone.jpg", description: "A sleek smartphone" }
@@ -23,6 +26,17 @@ const items = [
     { name: "Book", category: "literature" },
     { name: "Movie", category: "entertainment" }
 ];
+
+// Multer storage configuration
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "uploads/");
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+const upload = multer({ storage });
 
 // Routes
 
@@ -95,6 +109,18 @@ app.get("/contact", (req, res) => {
 app.post("/contact", (req, res) => {
     const { name, email, message } = req.body;
     res.render("thankyou", { name, email, message });
+});
+
+// Products catalog and add-product form
+app.get("/products", (req, res) => {
+    res.render("products", { products });
+});
+
+app.post("/products/add", upload.single("image"), (req, res) => {
+    const { name, description } = req.body;
+    const image = req.file ? `/uploads/${req.file.filename}` : "/images/default.jpg"; // Use a default image if none is uploaded
+    products.push({ name, description, image });
+    res.redirect("/products");
 });
 
 // Start the server
