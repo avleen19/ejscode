@@ -1,57 +1,18 @@
-const express=require("express");
-const app=express();
-const PORT=8080;
-const path=require("path");
-const filepath=path.join(__dirname,"./views/index.ejs");
-// app.set('view engine', 'ejs');
-// app.use(express.urlencoded({ extended: true })); 
+const express = require("express");
+const path = require("path");
+const app = express();
+const PORT = 8080;
 
-
-// app.get("/",(req,res)=>{
-//     let name="Sam";
-//     let place="Bengaluru"
-//     res.render(filepath,{name,destination:place});
-// })
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
-let tasks = []; 
+app.use(express.static("public")); // Serve static files from "public" directory
 
-app.get("/welcome", (req, res) => {
-    let username = req.query.username || "sam";
-    let currentHour = new Date().getHours();
-    let greeting = currentHour < 12 ? "Good Morning" : "Good Evening";
-    res.render("index", { username, greeting });
-});
-app.get("/todo", (req, res) => {
-    // Render 'index2.ejs' (for to-do list)
-    res.render("index2", { tasks });
-});
+let tasks = []; // Array for to-do tasks
 
-// Add a new task
-app.post("/addTask", (req, res) => {
-    let newTask = req.body.task;
-    if (newTask) {
-        tasks.push(newTask); // Add task to the array
-    }
-    res.redirect("/todo"); // Redirect to the to-do page after adding task
-});
-
-// Delete a task
-app.post("/deleteTask", (req, res) => {
-    let taskIndex = req.body.taskIndex;
-    if (taskIndex >= 0 && taskIndex < tasks.length) {
-        tasks.splice(taskIndex, 1); // Remove task from the array
-    }
-    res.redirect("/todo"); // Redirect to the to-do page after deleting task
-});
-
-
+// Sample products and users data
 const products = [
-    { name: "Laptop", price: 1200 },
-    { name: "Smartphone", price: 800 },
-    { name: "Tablet", price: 400 },
-    { name: "Headphones", price: 150 },
-    { name: "Smartwatch", price: 250 }
+    { name: "Laptop", price: 1200, image: "/images/laptop.jpg", description: "A powerful laptop" },
+    { name: "Smartphone", price: 800, image: "/images/smartphone.jpg", description: "A sleek smartphone" }
 ];
 const users = {
     "john": { age: 25, hobby: "Football" },
@@ -65,43 +26,84 @@ const items = [
     { name: "Movie", category: "entertainment" }
 ];
 
-app.get("/products", (req, res) => {
-    let filteredProducts = products;
-    const searchQuery = req.query.search;
+// Routes
 
-    if (searchQuery) {
-        filteredProducts = products.filter(product =>
-            product.name.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-    }
-
-    res.render("product", { products: filteredProducts });
+// Redirect root to welcome
+app.get("/", (req, res) => {
+    res.redirect("/welcome");
 });
+
+// Welcome route with greeting based on time
+app.get("/welcome", (req, res) => {
+    const username = req.query.username || "Sam";
+    const currentHour = new Date().getHours();
+    const greeting = currentHour < 12 ? "Good Morning" : "Good Evening";
+    res.render("index", { username, greeting });
+});
+
+// To-Do list
+app.get("/todo", (req, res) => {
+    res.render("index2", { tasks });
+});
+
+app.post("/addTask", (req, res) => {
+    const newTask = req.body.task;
+    if (newTask) tasks.push(newTask);
+    res.redirect("/todo");
+});
+
+app.post("/deleteTask", (req, res) => {
+    const taskIndex = parseInt(req.body.taskIndex, 10);
+    if (taskIndex >= 0 && taskIndex < tasks.length) {
+        tasks.splice(taskIndex, 1);
+    }
+    res.redirect("/todo");
+});
+
+// Product listing and search functionality
+app.get("/products", (req, res) => {
+    const searchQuery = req.query.search || "";
+    const filteredProducts = products.filter(product =>
+        product.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    res.render("products", { products: filteredProducts });
+});
+
+// User profile route
 app.get("/profile/:username", (req, res) => {
-    const username = req.params.username;
-
-    // Get user data based on the username
-    const user = users[username.toLowerCase()];
-
+    const username = req.params.username.toLowerCase();
+    const user = users[username];
     if (user) {
         res.render("profile", { username, age: user.age, hobby: user.hobby });
     } else {
         res.status(404).send("User not found");
     }
 });
+
+// Search route
 app.get("/search", (req, res) => {
-    const query = req.query.q || ""; // Get the query string
+    const query = req.query.q || "";
     const results = items.filter(item =>
         item.name.toLowerCase().includes(query.toLowerCase())
     );
-
     res.render("search", { query, results });
 });
-app.listen(PORT,(err)=>{
-    if(err){
-        console.log(err);
-    } 
-    else{
-        console.log(`Listening on PORT ${PORT}`);
+
+// Contact form
+app.get("/contact", (req, res) => {
+    res.render("contact");
+});
+
+app.post("/contact", (req, res) => {
+    const { name, email, message } = req.body;
+    res.render("thankyou", { name, email, message });
+});
+
+// Start the server
+app.listen(PORT, err => {
+    if (err) {
+        console.error(err);
+    } else {
+        console.log(`Server running on http://localhost:${PORT}`);
     }
-})
+});
