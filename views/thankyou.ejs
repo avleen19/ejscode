@@ -3,17 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome</title>
+    <title>Thank You</title>
 </head>
 <body>
     <%- include("./partials/header") %>
 
-    <h1><%= greeting %> <%= username %>!</h1>
-
-    <% if (username === "Sam") { %>
-        <h1>Hello, Sam!</h1>
-    <% } else { %>
-        <h1>Hello, Member!</h1>
-    <% } %>
+    <h1>Thank You, <%= name %>!</h1>
+    <p>We have received your message:</p>
+    <blockquote><%= message %></blockquote>
+    <p>We will reach out to you at <%= email %> soon.</p>
 </body>
 </html>

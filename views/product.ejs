@@ -1,12 +1,31 @@
-<%- include('partials/header') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+</head>
+<body>
+    <%- include("./partials/header") %>
 
-<main>
-    <h2>Available Products</h2>
-    <ul>
-        <% products.forEach(function(product) { %>
-            <li><%= product.name %>: $<%= product.price %></li>
+    <h1>To-Do List</h1>
+    
+    <!-- Form to add a new task -->
+    <form action="/addTask" method="POST">
+        <input type="text" name="task" placeholder="Enter a task" required>
+        <button type="submit">Add Task</button>
+    </form>
+
+    <ol>
+        <% tasks.forEach(function(task, index) { %>
+            <li>
+                <%= task %> 
+                <form action="/deleteTask" method="POST" style="display:inline;">
+                    <input type="hidden" name="taskIndex" value="<%= index %>">
+                    <button type="submit">Delete</button>
+                </form>
+            </li>
         <% }); %>
-    </ul>
-</main>
-
-<%- include('partials/footer') %>
+    </ol>
+</body>
+</html>

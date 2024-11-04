@@ -1,14 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
-</head>
-<body>
-    <h1>User Profile</h1>
-    <p><strong>Username:</strong> <%= username %></p>
-    <p><strong>Age:</strong> <%= age %></p>
-    <p><strong>Hobby:</strong> <%= hobby %></p>
-</body>
-</html>
+<%- include('partials/header') %>
+<h1>Profile of <%= username %></h1>
+<p>Age: <%= age %></p>
+<p>Hobby: <%= hobby %></p>
+<%- include('partials/footer') %>
