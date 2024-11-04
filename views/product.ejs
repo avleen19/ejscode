@@ -5,27 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To-Do List</title>
 </head>
+
 <body>
     <%- include("./partials/header") %>
 
-    <h1>To-Do List</h1>
-    
-    <!-- Form to add a new task -->
-    <form action="/addTask" method="POST">
-        <input type="text" name="task" placeholder="Enter a task" required>
-        <button type="submit">Add Task</button>
-    </form>
+
 
     <ol>
-        <% tasks.forEach(function(task, index) { %>
+        <% products.forEach(function(product, index) { %>
             <li>
-                <%= task %> 
-                <form action="/deleteTask" method="POST" style="display:inline;">
-                    <input type="hidden" name="taskIndex" value="<%= index %>">
-                    <button type="submit">Delete</button>
-                </form>
+                
+                <h4><%= product.name %></h4>
+                <h4><%= product.price %></h4>
             </li>
         <% }); %>
     </ol>
+
 </body>
 </html>
