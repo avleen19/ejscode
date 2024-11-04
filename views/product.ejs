@@ -3,23 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To-Do List</title>
+    <title>Products</title>
 </head>
-
 <body>
-    <%- include("./partials/header") %>
+    <%- include('partials/header') %>
 
+    <h1>Product Catalog</h1>
+    <div class="product-list">
+        <% products.forEach(product => { %>
+            <div class="product-item">
+                <img src="<%= product.image %>" alt="<%= product.name %>" style="width: 100px; height: auto;">
+                <h2><%= product.name %></h2>
+                <p><%= product.description %></p>
+            </div>
+        <% }) %>
+    </div>
 
+    <hr>
 
-    <ol>
-        <% products.forEach(function(product, index) { %>
-            <li>
-                
-                <h4><%= product.name %></h4>
-                <h4><%= product.price %></h4>
-            </li>
-        <% }); %>
-    </ol>
+    <h2>Add a New Product</h2>
+    <form action="/products/add" method="POST" enctype="multipart/form-data">
+        <label for="name">Product Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
 
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required></textarea><br><br>
+
+        <label for="image">Upload Image:</label>
+        <input type="file" id="image" name="image"><br><br>
+
+        <button type="submit">Add Product</button>
+    </form>
 </body>
 </html>
