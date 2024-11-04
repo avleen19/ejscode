@@ -6,10 +6,8 @@ const PORT = 8080;
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public")); // Serve static files from "public" directory
-
-let tasks = []; // Array for to-do tasks
-
-// Sample products and users data
+app.use(express.json())
+let tasks = []; 
 const products = [
     { name: "Laptop", price: 1200, image: "/images/laptop.jpg", description: "A powerful laptop" },
     { name: "Smartphone", price: 800, image: "/images/smartphone.jpg", description: "A sleek smartphone" }
@@ -61,12 +59,12 @@ app.post("/deleteTask", (req, res) => {
 });
 
 // Product listing and search functionality
-app.get("/products", (req, res) => {
+app.get("/product", (req, res) => {
     const searchQuery = req.query.search || "";
     const filteredProducts = products.filter(product =>
         product.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
-    res.render("products", { products: filteredProducts });
+    res.render("product", { products: filteredProducts });
 });
 
 // User profile route
